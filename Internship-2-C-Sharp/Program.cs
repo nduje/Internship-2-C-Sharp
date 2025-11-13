@@ -163,6 +163,7 @@
                         case 3:
                             break;
                         case 4:
+                            showUsersListMenu(users);
                             break;
                         default:
                             Console.WriteLine("Unos nije valjan");
@@ -252,7 +253,7 @@
 
                 Console.WriteLine();
 
-                users[users_number++] = new Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>
+                users[++users_number] = new Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>
                     (
                         user_firstname,
                         user_lastname,
@@ -285,6 +286,111 @@
                 }
 
                 return false;
+            }
+
+            static void showUsersListMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                Console.WriteLine("Pregled svih korisnika: ");
+                Console.WriteLine("a - Ispis svih korisnika abecedno po prezimenu");
+                Console.WriteLine("b - Svih onih koji imaju više od 20 godina");
+                Console.WriteLine("c - Svih onih koji imaju barem 2 putovanja");
+                Console.WriteLine();
+
+                chooseFromUsersListMenu(users);
+            }
+
+            static void chooseFromUsersListMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                Console.Write("Odabir: ");
+
+                if (char.TryParse((Console.ReadLine() ?? "").ToLower(), out char choice))
+                {
+                    Console.WriteLine();
+
+                    switch (choice)
+                    {
+                        case 'a':
+                            sortAllUsers(users);
+                            break;
+                        case 'b':
+                            filterUsersOlderThan20(users);
+                            break;
+                        case 'c':
+                            filterUsersWithMinTwoTrips(users);
+                            break;
+                        default:
+                            Console.WriteLine("Unos nije valjan");
+                            break;
+
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Unos nije valjan");
+                }
+            }
+
+            static void sortAllUsers(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                var sortedUsers = users.OrderBy(u => u.Value.Item2).ToDictionary(u => u.Key, u => u.Value);
+
+                listFilteredUsers(sortedUsers);
+
+                showUsersMenu(users);
+            }
+
+            static void filterUsersOlderThan20(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                var sortedUsersOlderThan20 = users
+                    .OrderBy(u => u.Value.Item2)
+                    .Where(u =>
+                    {
+                        if (DateTime.TryParse(u.Value.Item3, out DateTime birthDate))
+                        {
+                            DateTime twentyYearsAgo = DateTime.Now.AddYears(-20);
+
+                            return birthDate <= twentyYearsAgo;
+                        }
+
+                        return false;
+                    } )
+                    .ToDictionary(u => u.Key, u => u.Value);
+
+                listFilteredUsers(sortedUsersOlderThan20);
+
+                showUsersMenu(users);
+            }
+
+            static void filterUsersWithMinTwoTrips(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                var sortedUsersWithMinTwoTrips = users
+                    .OrderBy(u => u.Value.Item2)
+                    .Where(u =>
+                    {
+                        if (u.Value.Item4.Count >= 2)
+                        {
+                            return true;
+                        }
+
+                        return false;
+                    })
+                    .ToDictionary(u => u.Key, u => u.Value);
+
+                listFilteredUsers(sortedUsersWithMinTwoTrips);
+
+                showUsersMenu(users);
+            }
+
+            static void listFilteredUsers(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> sortedUsers)
+            {
+                Console.WriteLine("{0, -8} {1, -16} {2, -16} {3}", "ID", "Ime", "Prezime", "Datum rođenja");
+
+                foreach (var user in sortedUsers)
+                {
+                    Console.WriteLine("{0, -8} {1, -16} {2, -16} {3}", user.Key, user.Value.Item1, user.Value.Item2, user.Value.Item3);
+                }
+
+                Console.WriteLine();
             }
         }
     }
