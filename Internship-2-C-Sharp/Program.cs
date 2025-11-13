@@ -1,4 +1,6 @@
-﻿namespace Internship_2_C_Sharp
+﻿using System.Transactions;
+
+namespace Internship_2_C_Sharp
 {
     internal class Program
     {
@@ -161,6 +163,7 @@
                         case 2:
                             break;
                         case 3:
+                            editUser(users);
                             break;
                         case 4:
                             showUsersListMenu(users);
@@ -288,6 +291,68 @@
                 return false;
             }
 
+            static void editUser(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                while (true)
+                {
+                    Console.Write("Odaberite korisnika: (korisnik unosi id) ");
+
+                    if (int.TryParse(Console.ReadLine(), out int user_id))
+                    {
+                        if (users.ContainsKey(user_id))
+                        {
+                            string user_firstname, user_lastname, user_date_of_birth;
+
+                            do
+                            {
+                                Console.Write("Unesite novo ime: ");
+                                user_firstname = Console.ReadLine() ?? "";
+                            } while (string.IsNullOrEmpty(user_firstname));
+
+                            do
+                            {
+                                Console.Write("Unesite novo prezime: ");
+                                user_lastname = Console.ReadLine() ?? "";
+                            } while (string.IsNullOrEmpty(user_lastname));
+
+                            do
+                            {
+                                Console.Write("Unesite novi datum rođenja (YYYY-MM-DD): ");
+                                user_date_of_birth = Console.ReadLine() ?? "";
+                            } while (string.IsNullOrEmpty(user_date_of_birth) || !isDateValid(user_date_of_birth));
+
+                            Console.WriteLine();
+
+                            users[user_id] = new Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>
+                                (
+                                    user_firstname,
+                                    user_lastname,
+                                    user_date_of_birth,
+                                    users[user_id].Item4
+                                );
+
+                            Console.WriteLine("Korisnik ureden");
+                            Console.WriteLine("");
+                            break;
+                        }
+
+                        else
+                        {
+                            Console.WriteLine("Korisnik ne postoji");
+                            Console.WriteLine("");
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                        Console.WriteLine("");
+                    }
+                }
+
+                showUsersMenu(users);
+            }
+
             static void showUsersListMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
                 Console.WriteLine("Pregled svih korisnika: ");
@@ -301,32 +366,36 @@
 
             static void chooseFromUsersListMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
-                Console.Write("Odabir: ");
-
-                if (char.TryParse((Console.ReadLine() ?? "").ToLower(), out char choice))
+                while (true)
                 {
-                    Console.WriteLine();
+                    Console.Write("Odabir: ");
 
-                    switch (choice)
+                    if (char.TryParse((Console.ReadLine() ?? "").ToLower(), out char choice))
                     {
-                        case 'a':
-                            sortAllUsers(users);
-                            break;
-                        case 'b':
-                            filterUsersOlderThan20(users);
-                            break;
-                        case 'c':
-                            filterUsersWithMinTwoTrips(users);
-                            break;
-                        default:
-                            Console.WriteLine("Unos nije valjan");
-                            break;
+                        switch (choice)
+                        {
+                            case 'a':
+                                sortAllUsers(users);
+                                break;
+                            case 'b':
+                                filterUsersOlderThan20(users);
+                                break;
+                            case 'c':
+                                filterUsersWithMinTwoTrips(users);
+                                break;
+                            default:
+                                Console.WriteLine("Unos nije valjan");
+                                Console.WriteLine("");
+                                break;
 
+                        }
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Unos nije valjan");
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                        Console.WriteLine("");
+                    }
                 }
             }
 
@@ -383,6 +452,7 @@
 
             static void listFilteredUsers(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> sortedUsers)
             {
+                Console.WriteLine();
                 Console.WriteLine("{0, -8} {1, -16} {2, -16} {3}", "ID", "Ime", "Prezime", "Datum rođenja");
 
                 foreach (var user in sortedUsers)
