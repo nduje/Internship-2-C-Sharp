@@ -96,49 +96,58 @@ namespace Internship_2_C_Sharp
             };
 
             Console.WriteLine("APLIKACIJA ZA EVIDENCIJU GORIVA");
-            showMainMenu(users);
+            chooseFromMainMenu(users);
 
-            static void showMainMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            static void showMainMenu()
             {
                 Console.WriteLine("1 - Korisnici");
                 Console.WriteLine("2 - Putovanja");
                 Console.WriteLine("0 - Izlaz iz aplikacije");
                 Console.WriteLine("");
-
-                chooseFromMainMenu(users);
             }
 
             static void chooseFromMainMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
-                Console.Write("Odabir: ");
+                bool isOver = true;
 
-                if (int.TryParse(Console.ReadLine(), out int choice))
+                Console.WriteLine("");
+
+                while (isOver)
                 {
-                    Console.WriteLine("");
+                    showMainMenu();
 
-                    switch (choice)
+                    Console.Write("Odabir: ");
+
+                    if (int.TryParse(Console.ReadLine(), out int choice))
                     {
-                        case 0:
-                            return;
-                        case 1:
-                            showUsersMenu(users);
-                            break;
-                        case 2:
-                            showTripsMenu(users);
-                            break;
-                        default:
-                            Console.WriteLine("Unos nije valjan");
-                            break;
+                        switch (choice)
+                        {
+                            case 0:
+                                isOver = true;
+                                return;
+                            case 1:
+                                chooseFromUsersMenu(users);
+                                break;
+                            case 2:
+                                chooseFromTripsMenu(users);
+                                break;
+                            default:
+                                Console.WriteLine("Unos nije valjan");
+                                Console.WriteLine("");
+                                break;
 
+                        }
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Unos nije valjan");
-                }
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                        Console.WriteLine("");
+                    }
+                }                
             }
 
-            static void showUsersMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            static void showUsersMenu()
             {
                 Console.WriteLine("1 - Unos novog korisnika");
                 Console.WriteLine("2 - Brisanje korisnika");
@@ -146,47 +155,55 @@ namespace Internship_2_C_Sharp
                 Console.WriteLine("4 - Pregled svih korisnika");
                 Console.WriteLine("0 - Povratak na glavni izbornik");
                 Console.WriteLine("");
-
-                chooseFromUsersMenu(users);
             }
 
             static void chooseFromUsersMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
-                Console.Write("Odabir: ");
+                bool isOver = true;
 
-                if (int.TryParse(Console.ReadLine(), out int choice))
+                Console.WriteLine("");
+
+                while (isOver)
                 {
-                    Console.WriteLine("");
+                    showUsersMenu();
 
-                    switch (choice)
+                    Console.Write("Odabir: ");
+
+                    if (int.TryParse(Console.ReadLine(), out int choice))
                     {
-                        case 0:
-                            showMainMenu(users);
-                            break;
-                        case 1:
-                            addNewUser(users);
-                            break;
-                        case 2:
-                            break;
-                        case 3:
-                            editUser(users);
-                            break;
-                        case 4:
-                            showUsersListMenu(users);
-                            break;
-                        default:
-                            Console.WriteLine("Unos nije valjan");
-                            break;
+                        Console.WriteLine("");
 
+                        switch (choice)
+                        {
+                            case 0:
+                                isOver = false;
+                                break;
+                            case 1:
+                                addNewUser(users);
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                editUser(users);
+                                break;
+                            case 4:
+                                chooseFromUsersListMenu(users);
+                                break;
+                            default:
+                                Console.WriteLine("Unos nije valjan");
+                                break;
+
+                        }
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Unos nije valjan");
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                    }
                 }
             }
 
-            static void showTripsMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            static void showTripsMenu()
             {
                 Console.WriteLine("1 - Unos novog putovanja");
                 Console.WriteLine("2 - Brisanje putovanja");
@@ -195,43 +212,52 @@ namespace Internship_2_C_Sharp
                 Console.WriteLine("5 - Izvještaji i analize");
                 Console.WriteLine("0 - Povratak na glavni izbornik");
                 Console.WriteLine("");
-
-                chooseFromTripsMenu(users);
             }
 
             static void chooseFromTripsMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
-                Console.Write("Odabir: ");
+                bool isOver = true;
 
-                if (int.TryParse(Console.ReadLine(), out int choice))
+                Console.WriteLine("");
+
+                while (isOver)
                 {
-                    Console.WriteLine("");
+                    showTripsMenu();
 
-                    switch (choice)
+                    Console.Write("Odabir: ");
+
+                    if (int.TryParse(Console.ReadLine(), out int choice))
                     {
-                        case 0:
-                            showMainMenu(users);
-                            break;
-                        case 1:
-                            break;
-                        case 2:
-                            break;
-                        case 3:
-                            break;
-                        case 4:
-                            showTripsListMenu(users);
-                            break;
-                        case 5:
-                            break;
-                        default:
-                            Console.WriteLine("Unos nije valjan");
-                            break;
+                        Console.WriteLine("");
 
+                        switch (choice)
+                        {
+                            case 0:
+                                isOver = false;
+                                break;
+                            case 1:
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                break;
+                            case 4:
+                                chooseFromTripsListMenu(users);
+                                break;
+                            case 5:
+                                checkTripsReport(users);
+                                break;
+                            default:
+                                Console.WriteLine("Unos nije valjan");
+                                break;
+
+                        }
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Unos nije valjan");
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                    }
                 }
             }
 
@@ -276,13 +302,11 @@ namespace Internship_2_C_Sharp
 
                 Console.WriteLine("Dodan novi korisnik");
                 Console.WriteLine("");
-
-                showUsersMenu(users);
             }
 
             static bool isDateValid(string date)
             {
-                if (date.Length != 10 && date[4] != '-' && date[7] != '-')
+                if (date.Length != 10 || date[4] != '-' || date[7] != '-')
                     return false;
 
                 string string_year = date.Substring(0, 4);
@@ -356,25 +380,27 @@ namespace Internship_2_C_Sharp
                         Console.WriteLine("");
                     }
                 }
-
-                showUsersMenu(users);
             }
 
-            static void showUsersListMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            static void showUsersListMenu()
             {
                 Console.WriteLine("Pregled svih korisnika: ");
                 Console.WriteLine("a - Ispis svih korisnika abecedno po prezimenu");
                 Console.WriteLine("b - Svih onih koji imaju više od 20 godina");
                 Console.WriteLine("c - Svih onih koji imaju barem 2 putovanja");
                 Console.WriteLine("");
-
-                chooseFromUsersListMenu(users);
             }
 
             static void chooseFromUsersListMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
-                while (true)
+                bool isOver = true;
+
+                Console.WriteLine("");
+
+                while (isOver)
                 {
+                    showUsersListMenu();
+
                     Console.Write("Odabir: ");
 
                     if (char.TryParse((Console.ReadLine() ?? "").ToLower(), out char choice))
@@ -383,12 +409,15 @@ namespace Internship_2_C_Sharp
                         {
                             case 'a':
                                 sortAllUsers(users);
+                                isOver = false;
                                 break;
                             case 'b':
                                 filterUsersOlderThan20(users);
+                                isOver = false;
                                 break;
                             case 'c':
                                 filterUsersWithMinTwoTrips(users);
+                                isOver = false;
                                 break;
                             default:
                                 Console.WriteLine("Unos nije valjan");
@@ -411,8 +440,6 @@ namespace Internship_2_C_Sharp
                 var sortedUsers = users.OrderBy(u => u.Value.Item2).ToDictionary(u => u.Key, u => u.Value);
 
                 listFilteredUsers(sortedUsers);
-
-                showUsersMenu(users);
             }
 
             static void filterUsersOlderThan20(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
@@ -433,8 +460,6 @@ namespace Internship_2_C_Sharp
                     .ToDictionary(u => u.Key, u => u.Value);
 
                 listFilteredUsers(sortedUsersOlderThan20);
-
-                showUsersMenu(users);
             }
 
             static void filterUsersWithMinTwoTrips(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
@@ -453,8 +478,6 @@ namespace Internship_2_C_Sharp
                     .ToDictionary(u => u.Key, u => u.Value);
 
                 listFilteredUsers(sortedUsersWithMinTwoTrips);
-
-                showUsersMenu(users);
             }
 
             static void listFilteredUsers(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> sortedUsers)
@@ -470,7 +493,7 @@ namespace Internship_2_C_Sharp
                 Console.WriteLine("");
             }
 
-            static void showTripsListMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            static void showTripsListMenu()
             {
                 Console.WriteLine("Pregled svih putovanja: ");
                 Console.WriteLine("a - Sva putovanja redom kako su spremljena");
@@ -481,42 +504,51 @@ namespace Internship_2_C_Sharp
                 Console.WriteLine("f - Sva putovanja sortirana po datumu ulazno");
                 Console.WriteLine("g - Sva putovanja sortirana po datumu silazno");
                 Console.WriteLine("");
-
-                chooseFromTripsListMenu(users);
             }
 
             static void chooseFromTripsListMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
-                while (true)
+                bool isOver = true;
+
+                Console.WriteLine("");
+
+                while (isOver)
                 {
+                    showTripsListMenu();
+
                     Console.Write("Odabir: ");
 
                     if (char.TryParse((Console.ReadLine() ?? "").ToLower(), out char choice))
                     {
-                        Console.WriteLine("");
-
                         switch (choice)
                         {
                             case 'a':
                                 sortTrips(users);
+                                isOver = false;
                                 break;
                             case 'b':
                                 sortTripsByPriceAscending(users);
+                                isOver = false;
                                 break;
                             case 'c':
                                 sortTripsByPriceDescending(users);
+                                isOver = false;
                                 break;
                             case 'd':
                                 sortTripsByDistanceAscending(users);
+                                isOver = false;
                                 break;
                             case 'e':
                                 sortTripsByDistanceDescending(users);
+                                isOver = false;
                                 break;
                             case 'f':
                                 sortTripsByDateAscending(users);
+                                isOver = false;
                                 break;
                             case 'g':
                                 sortTripsByDateDescending(users);
+                                isOver = false;
                                 break;
                             default:
                                 Console.WriteLine("Unos nije valjan");
@@ -532,8 +564,6 @@ namespace Internship_2_C_Sharp
                         Console.WriteLine("");
                     }
                 }
-
-                
             }
 
             static void fetchTrips(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users, List<Tuple<string, double, double, double, double>> all_trips)
@@ -567,6 +597,7 @@ namespace Internship_2_C_Sharp
 
             static void sortTrips(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
+                Console.WriteLine("");
                 Console.WriteLine("Sva putovanja kako su spremljena:");
                 Console.WriteLine("");
 
@@ -575,12 +606,11 @@ namespace Internship_2_C_Sharp
                 fetchTrips(users, all_trips);
 
                 showTrips(all_trips);
-
-                showTripsMenu(users);
             }
 
             static void sortTripsByPriceAscending(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
+                Console.WriteLine("");
                 Console.WriteLine("Sva putovanja sortirana po trošku uzlazno:");
                 Console.WriteLine("");
 
@@ -591,12 +621,11 @@ namespace Internship_2_C_Sharp
                 var sorted_trips = all_trips.OrderBy(u => u.Item5).ToList();
 
                 showTrips(sorted_trips);
-
-                showTripsMenu(users);
             }
 
             static void sortTripsByPriceDescending(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
+                Console.WriteLine("");
                 Console.WriteLine("Sva putovanja sortirana po trošku silazno:");
                 Console.WriteLine("");
 
@@ -607,12 +636,11 @@ namespace Internship_2_C_Sharp
                 var sorted_trips = all_trips.OrderByDescending(u => u.Item5).ToList();
 
                 showTrips(sorted_trips);
-
-                showTripsMenu(users);
             }
 
             static void sortTripsByDistanceAscending(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
+                Console.WriteLine("");
                 Console.WriteLine("Sva putovanja sortirana po kilometraži uzlazno:");
                 Console.WriteLine("");
 
@@ -623,12 +651,11 @@ namespace Internship_2_C_Sharp
                 var sorted_trips = all_trips.OrderBy(u => u.Item2).ToList();
 
                 showTrips(sorted_trips);
-
-                showTripsMenu(users);
             }
 
             static void sortTripsByDistanceDescending(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
+                Console.WriteLine("");
                 Console.WriteLine("Sva putovanja sortirana po kilometraži silazno:");
                 Console.WriteLine("");
 
@@ -639,12 +666,11 @@ namespace Internship_2_C_Sharp
                 var sorted_trips = all_trips.OrderByDescending(u => u.Item2).ToList();
 
                 showTrips(sorted_trips);
-
-                showTripsMenu(users);
             }
 
             static void sortTripsByDateAscending(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
+                Console.WriteLine("");
                 Console.WriteLine("Sva putovanja sortirana po kilometraži silazno:");
                 Console.WriteLine("");
 
@@ -655,12 +681,11 @@ namespace Internship_2_C_Sharp
                 var sorted_trips = all_trips.OrderBy(u => u.Item1).ToList();
 
                 showTrips(sorted_trips);
-
-                showTripsMenu(users);
             }
 
             static void sortTripsByDateDescending(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
+                Console.WriteLine("");
                 Console.WriteLine("Sva putovanja sortirana po kilometraži silazno:");
                 Console.WriteLine("");
 
@@ -671,8 +696,207 @@ namespace Internship_2_C_Sharp
                 var sorted_trips = all_trips.OrderByDescending(u => u.Item1).ToList();
 
                 showTrips(sorted_trips);
+            }
 
-                showTripsMenu(users);
+            static bool isUserValid(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users, int user_id)
+            {
+                if (users.ContainsKey(user_id))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            static void filterTripsFromUser(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users, int user_id, List<Tuple<string, double, double, double, double>> trips)
+            {
+                var user_trips = users[user_id].Item4;
+
+                foreach (var trip in user_trips)
+                {
+                    trips.Add(Tuple.Create(trip.Value.Item1, trip.Value.Item2, trip.Value.Item3, trip.Value.Item4, trip.Value.Item5));
+                }
+            }
+
+            static void checkTripsReport(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                bool isOver = true;
+
+                while (isOver)
+                {
+                    Console.Write("Unesi ID korisnika za kojeg želiš izvještaj: ");
+
+                    if (int.TryParse(Console.ReadLine(), out int user_id))
+                    {
+                        Console.WriteLine("");
+
+                        if (isUserValid(users, user_id))
+                        {
+                            Console.WriteLine("Odabran je korisnik {0} {1}", users[user_id].Item1.ToUpper(), users[user_id].Item2.ToUpper());
+                            var trips = new List<Tuple<string, double, double, double, double>>();
+                            filterTripsFromUser(users, user_id, trips);
+                            chooseFromTripsReportMenu(trips);
+                            isOver = false;
+                        }
+
+                        else
+                        {
+                            Console.WriteLine("Korisnik s ID-em {0} ne postoji", user_id);
+                            Console.WriteLine("");
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                        Console.WriteLine("");
+                    }
+                }
+            }
+            
+            static void showTripsReportMenu()
+            {
+                Console.WriteLine("Izvještaji i analize: ");
+                Console.WriteLine("a - Ukupna potrošnja goriva");
+                Console.WriteLine("b - Ukupni troškovi goriva");
+                Console.WriteLine("c - Prosječna potrošnja goriva u L/100km");
+                Console.WriteLine("d - Putovanje s najvećom potrošnjom goriva");
+                Console.WriteLine("e - Pregled putovanja po određenom datumu");
+                Console.WriteLine("");
+            }
+
+            static void chooseFromTripsReportMenu(List<Tuple<string, double, double, double, double>> trips)
+            {
+                bool isOver = true;
+
+                Console.WriteLine("");
+
+                while (isOver)
+                {
+                    showTripsReportMenu();
+
+                    Console.Write("Odabir: ");
+
+                    if (char.TryParse((Console.ReadLine() ?? "").ToLower(), out char choice))
+                    {
+                        Console.WriteLine("");
+
+                        switch (choice)
+                        {
+                            case 'a':
+                                showTotalFuelConsumption(trips);
+                                break;
+                            case 'b':
+                                showTotalFuelCost(trips);
+                                break;
+                            case 'c':
+                                showAverageFuelConsumption(trips);
+                                break;
+                            case 'd':
+                                showMaxConsumptionTrip(trips);
+                                break;
+                            case 'e':
+                                showTripsByDate(trips);
+                                break;
+                            default:
+                                Console.WriteLine("Unos nije valjan");
+                                Console.WriteLine("");
+                                break;
+                        }
+
+                        break;
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                        Console.WriteLine("");
+                    }
+                }
+            }
+
+            static void showTotalFuelConsumption(List<Tuple<string, double, double, double, double>> trips)
+            {
+                double total_fuel_consumption = 0.0;
+
+                foreach (var trip in trips)
+                {
+                    total_fuel_consumption += trip.Item3;
+                }
+
+                Console.WriteLine("Ukupna potrošnja goriva je: {0} L", total_fuel_consumption);
+                Console.WriteLine("");
+            }
+
+            static void showTotalFuelCost(List<Tuple<string, double, double, double, double>> trips)
+            {
+                double total_fuel_cost = 0.0;
+
+                foreach (var trip in trips)
+                {
+                    total_fuel_cost += trip.Item5;
+                }
+
+                Console.WriteLine("Ukupna potrošnja goriva je: {0} EUR", total_fuel_cost);
+                Console.WriteLine("");
+            }
+
+            static void showAverageFuelConsumption(List<Tuple<string, double, double, double, double>> trips)
+            {
+                double average_fuel_consumption = 0.0;
+                double total_distance = 0.0;
+                double total_fuel_consumption = 0.0;
+
+                foreach (var trip in trips)
+                {
+                    total_distance += trip.Item2;
+                    total_fuel_consumption += trip.Item3;
+                }
+
+                average_fuel_consumption = (total_fuel_consumption / total_distance) * 100;
+
+                Console.WriteLine("Ukupna potrošnja goriva je: {0:F2} L/100km", average_fuel_consumption);
+                Console.WriteLine("");
+            }
+
+            static void showMaxConsumptionTrip(List<Tuple<string, double, double, double, double>> trips)
+            {
+                var maximum_consumption_trip = trips.MaxBy(u => u.Item4);
+
+                if (maximum_consumption_trip == null) { return; }
+
+                Console.WriteLine("Putovanje s najvećom potrošnjom goriva:");
+                Console.WriteLine("Datum: {0}", maximum_consumption_trip.Item1);
+                Console.WriteLine("Kilometri: {0}", maximum_consumption_trip.Item2);
+                Console.WriteLine("Gorivo: {0} L", maximum_consumption_trip.Item3);
+                Console.WriteLine("Cijena po litri: {0} EUR", maximum_consumption_trip.Item4);
+                Console.WriteLine("Ukupno: {0} EUR", maximum_consumption_trip.Item5);
+                Console.WriteLine("");
+            }
+
+            static void showTripsByDate(List<Tuple<string, double, double, double, double>> trips)
+            {
+                string trip_date;
+
+                do
+                {
+                    Console.Write("Unesite datum putovanja (YYYY-MM-DD): ");
+                    trip_date = Console.ReadLine() ?? "";
+                    Console.WriteLine("");
+                } while (string.IsNullOrEmpty(trip_date) || !isDateValid(trip_date));
+
+                var filtered_trips = trips.Where(u => trip_date == u.Item1).ToList();
+
+                if (filtered_trips.Count == 0)
+                {
+                    Console.WriteLine("Ne postoji niti jedno putovanje datuma {0}", trip_date);
+                    Console.WriteLine("");
+                }
+
+                else
+                {
+                    showTrips(filtered_trips);
+                }
             }
         }
     }
