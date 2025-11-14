@@ -236,6 +236,7 @@ namespace Internship_2_C_Sharp
                                 isOver = false;
                                 break;
                             case 1:
+                                checkAddNewTrip(users);
                                 break;
                             case 2:
                                 break;
@@ -491,6 +492,103 @@ namespace Internship_2_C_Sharp
                 }
 
                 Console.WriteLine("");
+            }
+
+            static void checkAddNewTrip(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                bool isOver = true;
+
+                while (isOver)
+                {
+                    Console.Write("Unesi ID korisnika kojem želiš dodati novo putovanje: ");
+
+                    if (int.TryParse(Console.ReadLine(), out int user_id))
+                    {
+                        Console.WriteLine("");
+
+                        if (isUserValid(users, user_id))
+                        {
+                            Console.WriteLine("Odabran je korisnik {0} {1}", users[user_id].Item1.ToUpper(), users[user_id].Item2.ToUpper());
+                            Console.WriteLine("");
+                            addNewTrip(users, user_id);
+                            isOver = false;
+                        }
+
+                        else
+                        {
+                            Console.WriteLine("Korisnik s ID-em {0} ne postoji", user_id);
+                            Console.WriteLine("");
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                        Console.WriteLine("");
+                    }
+                }
+            }
+
+            static void addNewTrip(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users, int user_id)
+            {
+                Console.WriteLine("UNOS NOVOG PUTOVANJA");
+
+                Console.WriteLine("");
+
+                double distance, fuel_consumption, fuel_cost, total_fuel_cost;
+                string trip_date;
+
+                do
+                {
+                    Console.Write("Unesite datum putovanja (YYYY-MM-DD): ");
+                    trip_date = Console.ReadLine() ?? "";
+                } while (string.IsNullOrEmpty(trip_date) || !isDateValid(trip_date));
+
+                while(true)
+                {
+                    Console.Write("Unesite prijeđenu kilometražu: ");
+                    if (double.TryParse(Console.ReadLine(), out distance) && distance > 0)
+                        break;
+                    Console.Write("Unos nije valjan");
+                }
+
+                while (true)
+                {
+                    Console.Write("Unesite količinu potrošenog goriva: ");
+                    if (double.TryParse(Console.ReadLine(), out fuel_consumption) && fuel_consumption > 0)
+                        break;
+                    Console.WriteLine("Unos nije valjan");
+                }
+
+                while (true)
+                {
+                    Console.Write("Unesite cijenu goriva po litri: ");
+                    if (double.TryParse(Console.ReadLine(), out fuel_cost) && fuel_cost > 0)
+                        break;
+                    Console.WriteLine("Unos nije valjan");
+                }
+
+                total_fuel_cost = calculateTotalFuelCost(fuel_consumption, fuel_cost);
+
+                Console.WriteLine("");
+
+                var user_trips = users[user_id].Item4;
+                var new_trip = Tuple.Create(trip_date, distance, fuel_consumption, fuel_cost, total_fuel_cost);
+
+                user_trips[++trips_number] = new_trip;
+
+                Console.WriteLine("Dodano novo putovanje:");
+                Console.WriteLine("Datum: {0}", user_trips[trips_number].Item1);
+                Console.WriteLine("Kilometri: {0}", user_trips[trips_number].Item2);
+                Console.WriteLine("Gorivo: {0} L", user_trips[trips_number].Item3);
+                Console.WriteLine("Cijena po litri: {0} EUR", user_trips[trips_number].Item4);
+                Console.WriteLine("Ukupno: {0} EUR", user_trips[trips_number].Item5);
+                Console.WriteLine("");
+            }
+
+            static double calculateTotalFuelCost(double fuel_consumption, double fuel_cost)
+            {
+                return fuel_consumption * fuel_cost;
             }
 
             static void showTripsListMenu()
