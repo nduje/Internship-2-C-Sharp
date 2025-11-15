@@ -21,7 +21,7 @@ namespace Internship_2_C_Sharp
                         "2000-01-06",
                         new Dictionary<int, Tuple<string, double, double, double, double>>()
                         {
-                            { 
+                            {
                                 1, new Tuple<string, double, double, double, double>
                                 (
                                     "2025-02-14",
@@ -41,7 +41,7 @@ namespace Internship_2_C_Sharp
                         "1998-11-30",
                         new Dictionary<int, Tuple<string, double, double, double, double>>()
                         {
-                            { 
+                            {
                                 2, new Tuple<string, double, double, double, double>
                                 (
                                     "2025-03-02",
@@ -71,7 +71,7 @@ namespace Internship_2_C_Sharp
                         "1991-06-30",
                         new Dictionary<int, Tuple<string, double, double, double, double>>()
                         {
-                            { 
+                            {
                                 4, new Tuple<string, double, double, double, double>
                                 (
                                     "2025-06-11",
@@ -244,6 +244,7 @@ namespace Internship_2_C_Sharp
                                 checkAddNewTrip(users);
                                 break;
                             case 2:
+                                chooseFromDeleteTripsMenu(users);
                                 break;
                             case 3:
                                 editTrip(users);
@@ -649,6 +650,252 @@ namespace Internship_2_C_Sharp
                 Console.WriteLine("");
             }
 
+            static void showDeleteTripsMenu()
+            {
+                Console.WriteLine("Brisanje putovanja: ");
+                Console.WriteLine("a - Po ID-u");
+                Console.WriteLine("b - Svih putovanja skupljih od unesenog iznosa");
+                Console.WriteLine("c - Svih putovanja jeftinijih od unesenog iznosa");
+                Console.WriteLine("");
+            }
+
+            static void chooseFromDeleteTripsMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                bool isOver = true;
+
+                while (isOver)
+                {
+                    if (!checkTrips(users))
+                    {
+                        Console.WriteLine("Ne postoji niti jedno putovanje u memoriji");
+                        Console.WriteLine("");
+                        break;
+                    }
+
+                    showDeleteTripsMenu();
+
+                    Console.Write("Odabir: ");
+
+                    if (char.TryParse((Console.ReadLine() ?? "").ToLower(), out char choice))
+                    {
+                        switch (choice)
+                        {
+                            case 'a':
+                                deleteTripById(users);
+                                isOver = false;
+                                break;
+                            case 'b':
+                                deleteTripsMoreExpensiveThan(users);
+                                isOver = false;
+                                break;
+                            case 'c':
+                                deleteTripsCheaperThan(users);
+                                isOver = false;
+                                break;
+                            default:
+                                Console.WriteLine("Unos nije valjan");
+                                Console.WriteLine("");
+                                break;
+
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                        Console.WriteLine("");
+                    }
+                }
+            }
+
+            static void deleteTripById(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                Console.WriteLine("");
+
+                while (true)
+                {
+                    Console.Write("Odaberite putovanje: ");
+
+                    if (int.TryParse(Console.ReadLine(), out int trip_id))
+                    {
+                        int user_id = 0;
+
+                        if (isTripValid(users, trip_id, ref user_id))
+                        {
+                            users[user_id].Item4.Remove(trip_id);
+
+                            Console.WriteLine("Putovanje izbrisano");
+                            Console.WriteLine("");
+                            break;
+                        }
+
+                        else
+                        {
+                            Console.WriteLine("Putovanje ne postoji");
+                            Console.WriteLine("");
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                        Console.WriteLine("");
+                    }
+                }
+            }
+
+            static void deleteTripsMoreExpensiveThan(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                Console.WriteLine("");
+
+                while (true)
+                {
+                    var filtered_trips_per_user = new Dictionary<int, List<int>>() { };
+
+                    Console.Write("Odaberite iznos: ");
+
+                    if (double.TryParse(Console.ReadLine(), out double threshold))
+                    {
+                        findTrips(users, filtered_trips_per_user, threshold, false);
+
+                        if (filtered_trips_per_user.Any())
+                        {
+                            foreach (var user in filtered_trips_per_user)
+                            {
+                                int user_id = user.Key;
+                                List<int> trip_ids = user.Value;
+
+                                foreach (int trip_id in trip_ids)
+                                {
+                                    users[user_id].Item4.Remove(trip_id);
+                                }
+                            }
+
+                            Console.WriteLine("Putovanja skuplja od unesenog iznosa ({0} EUR) su izbrisana", threshold);
+                            Console.WriteLine("");
+                            break;
+                        }
+
+                        else
+                        {
+                            Console.WriteLine("Putovanja skuplja od unesenog iznosa ({0} EUR) ne postoje", threshold);
+                            Console.WriteLine("");
+                            break;
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                        Console.WriteLine("");
+                    }
+                }
+            }
+
+            static void deleteTripsCheaperThan(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                Console.WriteLine("");
+
+                while (true)
+                {
+                    var filtered_trips_per_user = new Dictionary<int, List<int>>() { };
+
+                    Console.Write("Odaberite iznos: ");
+
+                    if (double.TryParse(Console.ReadLine(), out double threshold))
+                    {
+                        findTrips(users, filtered_trips_per_user, threshold, true);
+
+                        if (filtered_trips_per_user.Any())
+                        {
+                            foreach (var user in filtered_trips_per_user)
+                            {
+                                int user_id = user.Key;
+                                List<int> trip_ids = user.Value;
+
+                                foreach (int trip_id in trip_ids)
+                                {
+                                    users[user_id].Item4.Remove(trip_id);
+                                }
+                            }
+
+                            Console.WriteLine("Putovanja jeftinija od unesenog iznosa ({0} EUR) su izbrisana", threshold);
+                            Console.WriteLine("");
+                            break;
+                        }
+
+                        else
+                        {
+                            Console.WriteLine("Putovanja jeftinija od unesenog iznosa ({0} EUR) ne postoje", threshold);
+                            Console.WriteLine("");
+                            break;
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                        Console.WriteLine("");
+                    }
+                }
+            }
+
+            static void findTrips(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users, Dictionary<int, List<int>> filtered_trips_per_user, double threshold, bool cheaper)
+            {
+                foreach (var user in users)
+                {
+                    int user_id = user.Key;
+                    var trips = user.Value.Item4;
+
+                    foreach (var trip in trips)
+                    {
+                        int trip_id = trip.Key;
+
+                        switch (cheaper)
+                        {
+                            case true:
+                                if (trip.Value.Item5 < threshold)
+                                {
+                                    if (!filtered_trips_per_user.ContainsKey(user_id))
+                                    {
+                                        filtered_trips_per_user[user_id] = new List<int>();
+                                    }
+
+                                    filtered_trips_per_user[user_id].Add(trip_id);
+                                }
+                                break;
+
+                            case false:
+                                if (trip.Value.Item5 > threshold)
+                                {
+                                    if (!filtered_trips_per_user.ContainsKey(user_id))
+                                    {
+                                        filtered_trips_per_user[user_id] = new List<int>();
+                                    }
+
+                                    filtered_trips_per_user[user_id].Add(trip_id);
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
+
+            static bool checkTrips(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                foreach (var user in users)
+                {
+                    var trips = user.Value.Item4;
+
+                    if (trips.Any())
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
             static void editTrip(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
                 while (true)
@@ -799,8 +1046,6 @@ namespace Internship_2_C_Sharp
             static void chooseFromTripsListMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
                 bool isOver = true;
-
-                Console.WriteLine("");
 
                 while (isOver)
                 {
