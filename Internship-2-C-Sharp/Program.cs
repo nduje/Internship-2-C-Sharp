@@ -17,7 +17,7 @@ namespace Internship_2_C_Sharp
                 {1, new Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>
                     (
                         "Duje",
-                        "Dujić",
+                        "Dujic",
                         "2000-01-06",
                         new Dictionary<int, Tuple<string, double, double, double, double>>()
                         {
@@ -37,7 +37,7 @@ namespace Internship_2_C_Sharp
                 {2, new Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>
                     (
                         "Marko",
-                        "Markić",
+                        "Markic",
                         "1998-11-30",
                         new Dictionary<int, Tuple<string, double, double, double, double>>()
                         {
@@ -67,7 +67,7 @@ namespace Internship_2_C_Sharp
                 { 3, new Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>
                     (
                         "Josip",
-                        "Josipović",
+                        "Josipovic",
                         "1991-06-30",
                         new Dictionary<int, Tuple<string, double, double, double, double>>()
                         {
@@ -187,6 +187,7 @@ namespace Internship_2_C_Sharp
                                 addNewUser(users);
                                 break;
                             case 2:
+                                chooseFromDeleteUsersMenu(users);
                                 break;
                             case 3:
                                 editUser(users);
@@ -385,6 +386,136 @@ namespace Internship_2_C_Sharp
                 }
 
                 return false;
+            }
+
+            static void showDeleteUsersMenu()
+            {
+                Console.WriteLine("Brisanje korisnika:");
+                Console.WriteLine("a - Po ID-u");
+                Console.WriteLine("b - Po imenu i prezimenu");
+                Console.WriteLine("");
+            }
+
+            static void chooseFromDeleteUsersMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                bool isOver = true;
+
+                while (isOver)
+                {
+                    if (!users.Any())
+                    {
+                        Console.WriteLine("Ne postoji niti jedan korisnik u memoriji");
+                        Console.WriteLine("");
+                        break;
+                    }
+
+                    showDeleteUsersMenu();
+
+                    Console.Write("Odabir: ");
+
+                    if (char.TryParse((Console.ReadLine() ?? "").ToLower(), out char choice))
+                    {
+                        switch (choice)
+                        {
+                            case 'a':
+                                deleteUserById(users);
+                                isOver = false;
+                                break;
+                            case 'b':
+                                deleteUserByName(users);
+                                isOver = false;
+                                break;
+                            default:
+                                Console.WriteLine("Unos nije valjan");
+                                Console.WriteLine("");
+                                break;
+
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                        Console.WriteLine("");
+                    }
+                }
+            }
+
+            static void deleteUserById(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                Console.WriteLine("");
+
+                while (true)
+                {
+                    Console.Write("Odaberite korisnika (unesite ID): ");
+
+                    if (int.TryParse(Console.ReadLine(), out int user_id))
+                    {
+                        if (users.ContainsKey(user_id))
+                        {
+                            users.Remove(user_id);
+
+                            Console.WriteLine("Korisnik izbrisan");
+                            Console.WriteLine("");
+                            break;
+                        }
+
+                        else
+                        {
+                            Console.WriteLine("Putovanje ne postoji");
+                            Console.WriteLine("");
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                        Console.WriteLine("");
+                    }
+                }
+            }
+
+            static void deleteUserByName(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                Console.WriteLine("");
+
+                string full_name = "";
+                bool isOver = false;
+
+                do
+                {
+                    Console.Write("Odaberite korisnika (unesite ime i prezime): ");
+                    full_name = (Console.ReadLine() ?? "").Trim();
+
+                    if (string.IsNullOrEmpty(full_name) || !full_name.All(c => char.IsLetter(c) || c == ' '))
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                        Console.WriteLine("");
+                        continue;
+                    }
+
+                    foreach (var user in users)
+                    {
+                        string first_name = user.Value.Item1;
+                        string last_name = user.Value.Item2;
+                        int user_id = user.Key;
+
+                        if (full_name.ToLower().Equals(first_name.ToLower() + " " + last_name.ToLower()))
+                        {
+                            users.Remove(user_id);
+                            Console.WriteLine("Korisnik {0} - {1} {2} je obrisan", user_id, first_name, last_name);
+                            Console.WriteLine("");
+                            isOver = true;
+                            break;
+                        }
+                    }
+
+                    if (!isOver)
+                    {
+                        Console.WriteLine("Korisnik ne postoji");
+                        Console.WriteLine("");
+                    }
+                } while (!isOver);
             }
 
             static void editUser(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
@@ -652,7 +783,7 @@ namespace Internship_2_C_Sharp
 
             static void showDeleteTripsMenu()
             {
-                Console.WriteLine("Brisanje putovanja: ");
+                Console.WriteLine("Brisanje putovanja:");
                 Console.WriteLine("a - Po ID-u");
                 Console.WriteLine("b - Svih putovanja skupljih od unesenog iznosa");
                 Console.WriteLine("c - Svih putovanja jeftinijih od unesenog iznosa");
