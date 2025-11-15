@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection.Metadata;
+using System.Security.Cryptography;
 using System.Transactions;
 
 namespace Internship_2_C_Sharp
@@ -102,6 +103,7 @@ namespace Internship_2_C_Sharp
             {
                 Console.WriteLine("1 - Korisnici");
                 Console.WriteLine("2 - Putovanja");
+                Console.WriteLine("3 - Statistika");
                 Console.WriteLine("0 - Izlaz iz aplikacije");
                 Console.WriteLine("");
             }
@@ -130,6 +132,9 @@ namespace Internship_2_C_Sharp
                                 break;
                             case 2:
                                 chooseFromTripsMenu(users);
+                                break;
+                            case 3:
+                                chooseFromStatsMenu(users);
                                 break;
                             default:
                                 Console.WriteLine("Unos nije valjan");
@@ -247,6 +252,63 @@ namespace Internship_2_C_Sharp
                                 break;
                             case 5:
                                 checkTripsReport(users);
+                                break;
+                            default:
+                                Console.WriteLine("Unos nije valjan");
+                                break;
+
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                    }
+                }
+            }
+
+            static void showStatsMenu()
+            {
+                Console.WriteLine("1 - Korisnik s najvećim ukupnim troškom goriva");
+                Console.WriteLine("2 - Korisnik s najviše putovanja");
+                Console.WriteLine("3 - Prosječan broj putovanja po korisniku");
+                Console.WriteLine("4 - Ukupan broj prijeđenih kilometara svih korisnika");
+                Console.WriteLine("0 - Povratak na glavni izbornik");
+                Console.WriteLine("");
+            }
+
+            static void chooseFromStatsMenu(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                bool isOver = true;
+
+                Console.WriteLine("");
+
+                while (isOver)
+                {
+                    showStatsMenu();
+
+                    Console.Write("Odabir: ");
+
+                    if (int.TryParse(Console.ReadLine(), out int choice))
+                    {
+                        Console.WriteLine("");
+
+                        switch (choice)
+                        {
+                            case 0:
+                                isOver = false;
+                                break;
+                            case 1:
+                                showUserWithHighestFuelCost(users);
+                                break;
+                            case 2:
+                                showUserWithMostTrips(users);
+                                break;
+                            case 3:
+                                showAverageTripsPerUser(users);
+                                break;
+                            case 4:
+                                showTotalDistance(users);
                                 break;
                             default:
                                 Console.WriteLine("Unos nije valjan");
@@ -995,6 +1057,110 @@ namespace Internship_2_C_Sharp
                 {
                     showTrips(filtered_trips);
                 }
+            }
+
+            static void showUserWithHighestFuelCost(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                int max_user_id = 0;
+                double max_fuel_cost = 0;
+
+                foreach (var user in users)
+                {
+                    int user_id = user.Key;
+                    var trips = user.Value.Item4;
+
+                    double total_fuel_cost = 0;
+
+                    foreach (var trip in trips)
+                    {
+                        total_fuel_cost += trip.Value.Item5;
+                    }
+
+                    if (total_fuel_cost > max_fuel_cost)
+                    {
+                        max_fuel_cost = total_fuel_cost;
+                        max_user_id = user_id;
+                    }
+                }
+
+                Console.WriteLine("Korisnik s najvećom ukupnim troškom goriva je {0} - {1} {2} i ona iznosi: {3} EUR", max_user_id, users[max_user_id].Item1, users[max_user_id].Item2, max_fuel_cost);
+                Console.WriteLine("");
+            }
+
+            static void showUserWithMostTrips(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                var users_id = new List<int>();
+                int most_trips_number = 0;
+
+                foreach (var user in users)
+                {
+                    int user_id = user.Key;
+                    var trips = user.Value.Item4;
+
+                    if (trips.Count > most_trips_number)
+                    {
+                        users_id.Clear();
+                        users_id.Add(user_id);
+                        most_trips_number = trips.Count;
+                    }
+
+                    else if (trips.Count == most_trips_number)
+                    {
+                        users_id.Add(user_id);
+                    }
+                }
+
+                Console.WriteLine("Korisnici s najviše putovanja ({0}):", most_trips_number);
+                Console.WriteLine("{0, -8} {1, -16} {2, -16}", "ID", "Ime", "Prezime");
+
+                foreach (var user_id in users_id)
+                {
+                    Console.WriteLine("{0, -8} {1, -16} {2}", user_id, users[user_id].Item1, users[user_id].Item2);
+                }
+
+                Console.WriteLine("");
+            }
+
+            static void showAverageTripsPerUser(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                int total_number_of_users = users.Count;
+                int total_number_of_trips = 0;
+                double average_trips_per_user = 0.0;
+
+                foreach (var user in users)
+                {
+                    var trips = user.Value.Item4;
+                    total_number_of_trips += trips.Count;
+                }
+
+                average_trips_per_user = (double) total_number_of_trips / total_number_of_users;
+
+                Console.WriteLine("Ukupno ima {0} korisnika i {1} putovanja", total_number_of_users, total_number_of_trips);
+                Console.WriteLine("Prosječan broj putovanja po korisniku iznosi: {0:F2}", average_trips_per_user);
+                Console.WriteLine("");
+            }
+
+            static void showTotalDistance(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                int total_number_of_users = users.Count;
+                int total_number_of_trips = 0;
+                double total_distance = 0.0;
+
+                foreach (var user in users)
+                {
+                    var trips = user.Value.Item4;
+                    total_number_of_trips += trips.Count;
+
+                    foreach (var trip in trips)
+                    {
+                        double distance = trip.Value.Item2;
+                        total_distance += distance;
+                    }
+                }
+
+                Console.WriteLine("Ukupno ima {0} korisnika i {1} putovanja", total_number_of_users, total_number_of_trips);
+                Console.WriteLine("Zajedno su svi korisnici prešli: {0:F2} km", total_distance);
+                Console.WriteLine("");
             }
         }
     }
