@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection.Metadata;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Transactions;
 
@@ -112,10 +113,10 @@ namespace Internship_2_C_Sharp
             {
                 bool isOver = true;
 
-                Console.WriteLine("");
-
                 while (isOver)
                 {
+                    Console.WriteLine("");
+
                     showMainMenu();
 
                     Console.Write("Odabir: ");
@@ -138,7 +139,6 @@ namespace Internship_2_C_Sharp
                                 break;
                             default:
                                 Console.WriteLine("Unos nije valjan");
-                                Console.WriteLine("");
                                 break;
 
                         }
@@ -147,7 +147,6 @@ namespace Internship_2_C_Sharp
                     else
                     {
                         Console.WriteLine("Unos nije valjan");
-                        Console.WriteLine("");
                     }
                 }                
             }
@@ -166,18 +165,16 @@ namespace Internship_2_C_Sharp
             {
                 bool isOver = true;
 
-                Console.WriteLine("");
-
                 while (isOver)
                 {
+                    Console.WriteLine("");
+
                     showUsersMenu();
 
                     Console.Write("Odabir: ");
 
                     if (int.TryParse(Console.ReadLine(), out int choice))
-                    {
-                        Console.WriteLine("");
-
+                    {                        
                         switch (choice)
                         {
                             case 0:
@@ -224,18 +221,16 @@ namespace Internship_2_C_Sharp
             {
                 bool isOver = true;
 
-                Console.WriteLine("");
-
                 while (isOver)
                 {
+                    Console.WriteLine("");
+
                     showTripsMenu();
 
                     Console.Write("Odabir: ");
 
                     if (int.TryParse(Console.ReadLine(), out int choice))
                     {
-                        Console.WriteLine("");
-
                         switch (choice)
                         {
                             case 0:
@@ -259,7 +254,6 @@ namespace Internship_2_C_Sharp
                             default:
                                 Console.WriteLine("Unos nije valjan");
                                 break;
-
                         }
                     }
 
@@ -284,18 +278,16 @@ namespace Internship_2_C_Sharp
             {
                 bool isOver = true;
 
-                Console.WriteLine("");
-
                 while (isOver)
                 {
+                    Console.WriteLine("");
+
                     showStatsMenu();
 
                     Console.Write("Odabir: ");
 
                     if (int.TryParse(Console.ReadLine(), out int choice))
                     {
-                        Console.WriteLine("");
-
                         switch (choice)
                         {
                             case 0:
@@ -329,8 +321,8 @@ namespace Internship_2_C_Sharp
 
             static void addNewUser(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
+                Console.WriteLine("");
                 Console.WriteLine("UNOS NOVOG KORISNIKA");
-
                 Console.WriteLine("");
 
                 string user_firstname, user_lastname, user_date_of_birth;
@@ -366,8 +358,7 @@ namespace Internship_2_C_Sharp
                         }
                     );
 
-                Console.WriteLine("Dodan novi korisnik");
-                Console.WriteLine("");
+                Console.WriteLine("Dodan novi korisnik {0} {1} ({2})", user_firstname, user_lastname, users_number);
             }
 
             static bool isDateValid(string date)
@@ -409,6 +400,8 @@ namespace Internship_2_C_Sharp
                         break;
                     }
 
+                    Console.WriteLine("");
+
                     showDeleteUsersMenu();
 
                     Console.Write("Odabir: ");
@@ -427,7 +420,6 @@ namespace Internship_2_C_Sharp
                                 break;
                             default:
                                 Console.WriteLine("Unos nije valjan");
-                                Console.WriteLine("");
                                 break;
 
                         }
@@ -436,13 +428,40 @@ namespace Internship_2_C_Sharp
                     else
                     {
                         Console.WriteLine("Unos nije valjan");
-                        Console.WriteLine("");
                     }
                 }
             }
 
+            static bool checkInput()
+            {
+                string input = "";
+
+                while (true)
+                {
+                    input = Console.ReadLine()?.Trim().ToLower() ?? "";
+
+                    if (input == "da" || input == "ne")
+                        break;
+
+                    else
+                    {
+                        Console.Write("Unos nije valjan, ponovite upis (DA/NE) ");
+                        continue;
+                    }
+                }
+;
+                Console.WriteLine("");
+
+                if (input == "da")
+                    return true;
+
+                else return false;
+            }
+
             static void deleteUserById(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
+                Console.WriteLine("");
+                Console.WriteLine("BRISANJE POSTOJEĆEG KORISNIKA PO IDENTIFIKATORU");
                 Console.WriteLine("");
 
                 while (true)
@@ -453,16 +472,30 @@ namespace Internship_2_C_Sharp
                     {
                         if (users.ContainsKey(user_id))
                         {
-                            users.Remove(user_id);
+                            string first_name = users[user_id].Item1;
+                            string last_name = users[user_id].Item2;
 
-                            Console.WriteLine("Korisnik izbrisan");
                             Console.WriteLine("");
+                            Console.Write("Jeste li sigurni da želite obrisati korisnika {0} {1} ({2})? (DA/NE) ", first_name, last_name, user_id);
+
+                            if (checkInput())
+                            {
+                                users.Remove(user_id);
+
+                                Console.WriteLine("Korisnik {0} {1} ({2}) je obrisan", first_name, last_name, user_id);
+                            }
+
+                            else
+                            {
+                                Console.WriteLine("Brisanje korisnika {0} {1} ({2}) je prekinuto", first_name, last_name, user_id);
+                            }
+
                             break;
                         }
 
                         else
                         {
-                            Console.WriteLine("Putovanje ne postoji");
+                            Console.WriteLine("Korisnik ne postoji");
                             Console.WriteLine("");
                         }
                     }
@@ -477,6 +510,8 @@ namespace Internship_2_C_Sharp
 
             static void deleteUserByName(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
+                Console.WriteLine("");
+                Console.WriteLine("BRISANJE POSTOJEĆEG KORISNIKA PO IMENU I PREZIMENU");
                 Console.WriteLine("");
 
                 string full_name = "";
@@ -502,9 +537,20 @@ namespace Internship_2_C_Sharp
 
                         if (full_name.ToLower().Equals(first_name.ToLower() + " " + last_name.ToLower()))
                         {
-                            users.Remove(user_id);
-                            Console.WriteLine("Korisnik {0} - {1} {2} je obrisan", user_id, first_name, last_name);
                             Console.WriteLine("");
+                            Console.Write("Jeste li sigurni da želite obrisati korisnika {0} {1} ({2})? (DA/NE) ", first_name, last_name, user_id);
+
+                            if (checkInput())
+                            {
+                                users.Remove(user_id);
+                                Console.WriteLine("Korisnik {0} {1} ({2}) je obrisan", first_name, last_name, user_id);
+                            }
+
+                            else
+                            {
+                                Console.WriteLine("Brisanje korisnika {0} {1} ({2}) je prekinuto", first_name, last_name, user_id);
+                            }
+
                             isOver = true;
                             break;
                         }
@@ -520,15 +566,23 @@ namespace Internship_2_C_Sharp
 
             static void editUser(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
+                Console.WriteLine("");
+                Console.WriteLine("UREĐIVANJE POSTOJECEG KORISNIKA PO IDENTIFIKATORU");
+                Console.WriteLine("");
+
                 while (true)
                 {
-                    Console.Write("Odaberite korisnika: ");
+                    Console.Write("Odaberite korisnika (unesite ID): ");
 
                     if (int.TryParse(Console.ReadLine(), out int user_id))
                     {
                         if (users.ContainsKey(user_id))
                         {
                             string user_firstname, user_lastname, user_date_of_birth;
+
+                            Console.WriteLine("");
+                            Console.WriteLine("Ureduje se korisnik {0} {1} ({2})", users[user_id].Item1, users[user_id].Item2, user_id);
+                            Console.WriteLine("");
 
                             do
                             {
@@ -549,8 +603,11 @@ namespace Internship_2_C_Sharp
                             } while (string.IsNullOrEmpty(user_date_of_birth) || !isDateValid(user_date_of_birth));
 
                             Console.WriteLine("");
+                            Console.Write("Jeste li sigurni da želite urediti dosadašnjeg korisnika {0} {1} ({2})? (DA/NE) ", users[user_id].Item1, users[user_id].Item2, user_id);
 
-                            users[user_id] = new Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>
+                            if (checkInput())
+                            {
+                                users[user_id] = new Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>
                                 (
                                     user_firstname,
                                     user_lastname,
@@ -558,8 +615,14 @@ namespace Internship_2_C_Sharp
                                     users[user_id].Item4
                                 );
 
-                            Console.WriteLine("Korisnik ureden");
-                            Console.WriteLine("");
+                                Console.WriteLine("Korisnik {0} {1} ({2}) je ureden", user_firstname, user_lastname, user_id);
+                            }
+
+                            else
+                            {
+                                Console.WriteLine("Uređivanje korisnika {0} {1} ({2}) je prekinuto", users[user_id].Item1, users[user_id].Item2, user_id);
+                            }
+
                             break;
                         }
 
@@ -591,10 +654,10 @@ namespace Internship_2_C_Sharp
             {
                 bool isOver = true;
 
-                Console.WriteLine("");
-
                 while (isOver)
                 {
+                    Console.WriteLine("");
+
                     showUsersListMenu();
 
                     Console.Write("Odabir: ");
@@ -617,7 +680,6 @@ namespace Internship_2_C_Sharp
                                 break;
                             default:
                                 Console.WriteLine("Unos nije valjan");
-                                Console.WriteLine("");
                                 break;
 
                         }
@@ -626,7 +688,6 @@ namespace Internship_2_C_Sharp
                     else
                     {
                         Console.WriteLine("Unos nije valjan");
-                        Console.WriteLine("");
                     }
                 }
             }
@@ -635,6 +696,8 @@ namespace Internship_2_C_Sharp
             {
                 var sortedUsers = users.OrderBy(u => u.Value.Item2).ToDictionary(u => u.Key, u => u.Value);
 
+                Console.WriteLine("");
+                Console.WriteLine("Prikaz svih korisnika abecedno po prezimenu:");
                 listFilteredUsers(sortedUsers);
             }
 
@@ -655,6 +718,8 @@ namespace Internship_2_C_Sharp
                     } )
                     .ToDictionary(u => u.Key, u => u.Value);
 
+                Console.WriteLine("");
+                Console.WriteLine("Prikaz svih onih korisnika koji imaju više od 20 godina:");
                 listFilteredUsers(sortedUsersOlderThan20);
             }
 
@@ -673,20 +738,19 @@ namespace Internship_2_C_Sharp
                     })
                     .ToDictionary(u => u.Key, u => u.Value);
 
+                Console.WriteLine("");
+                Console.WriteLine("Prikaz svih onih korisnika koji imaju barem 2 putovanja:");
                 listFilteredUsers(sortedUsersWithMinTwoTrips);
             }
 
             static void listFilteredUsers(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> sortedUsers)
             {
-                Console.WriteLine("");
                 Console.WriteLine("{0, -8} {1, -16} {2, -16} {3}", "ID", "Ime", "Prezime", "Datum rođenja");
 
                 foreach (var user in sortedUsers)
                 {
                     Console.WriteLine("{0, -8} {1, -16} {2, -16} {3}", user.Key, user.Value.Item1, user.Value.Item2, user.Value.Item3);
                 }
-
-                Console.WriteLine("");
             }
 
             static void checkAddNewTrip(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
@@ -699,12 +763,10 @@ namespace Internship_2_C_Sharp
 
                     if (int.TryParse(Console.ReadLine(), out int user_id))
                     {
-                        Console.WriteLine("");
-
                         if (isUserValid(users, user_id))
                         {
-                            Console.WriteLine("Odabran je korisnik {0} {1}", users[user_id].Item1.ToUpper(), users[user_id].Item2.ToUpper());
                             Console.WriteLine("");
+                            Console.WriteLine("Odabran je korisnik {0} {1} ({2})", users[user_id].Item1, users[user_id].Item2, user_id);
                             addNewTrip(users, user_id);
                             isOver = false;
                         }
@@ -726,8 +788,8 @@ namespace Internship_2_C_Sharp
 
             static void addNewTrip(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users, int user_id)
             {
+                Console.WriteLine("");
                 Console.WriteLine("UNOS NOVOG PUTOVANJA");
-
                 Console.WriteLine("");
 
                 double distance, fuel_consumption, fuel_cost, total_fuel_cost;
@@ -778,7 +840,6 @@ namespace Internship_2_C_Sharp
                 Console.WriteLine("Gorivo: {0} L", user_trips[trips_number].Item3);
                 Console.WriteLine("Cijena po litri: {0} EUR", user_trips[trips_number].Item4);
                 Console.WriteLine("Ukupno: {0} EUR", user_trips[trips_number].Item5);
-                Console.WriteLine("");
             }
 
             static void showDeleteTripsMenu()
@@ -803,6 +864,8 @@ namespace Internship_2_C_Sharp
                         break;
                     }
 
+                    Console.WriteLine("");
+
                     showDeleteTripsMenu();
 
                     Console.Write("Odabir: ");
@@ -825,7 +888,6 @@ namespace Internship_2_C_Sharp
                                 break;
                             default:
                                 Console.WriteLine("Unos nije valjan");
-                                Console.WriteLine("");
                                 break;
 
                         }
@@ -834,7 +896,6 @@ namespace Internship_2_C_Sharp
                     else
                     {
                         Console.WriteLine("Unos nije valjan");
-                        Console.WriteLine("");
                     }
                 }
             }
@@ -842,10 +903,12 @@ namespace Internship_2_C_Sharp
             static void deleteTripById(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
                 Console.WriteLine("");
+                Console.WriteLine("BRISANJE POSTOJEĆEG PUTOVANJA PO IDENTIFIKATORU");
+                Console.WriteLine("");
 
                 while (true)
                 {
-                    Console.Write("Odaberite putovanje: ");
+                    Console.Write("Odaberite putovanje (unesite ID): ");
 
                     if (int.TryParse(Console.ReadLine(), out int trip_id))
                     {
@@ -853,16 +916,27 @@ namespace Internship_2_C_Sharp
 
                         if (isTripValid(users, trip_id, ref user_id))
                         {
-                            users[user_id].Item4.Remove(trip_id);
-
-                            Console.WriteLine("Putovanje izbrisano");
                             Console.WriteLine("");
+                            Console.Write("Jeste li sigurni da želite obrisati putovanje s identifikatorom ({0})? (DA/NE) ", trip_id);
+
+                            if (checkInput())
+                            {
+                                users[user_id].Item4.Remove(trip_id);
+
+                                Console.WriteLine("Putovanje s identifikatorom ({0}) je obrisano", trip_id);
+                            }
+
+                            else
+                            {
+                                Console.WriteLine("Brisanje putovanja s identifikatorom ({0}) je prekinuto", trip_id);
+                            }
+
                             break;
                         }
 
                         else
                         {
-                            Console.WriteLine("Putovanje ne postoji");
+                            Console.WriteLine("Putovanje s identifikatorom ({0}) ne postoji", trip_id);
                             Console.WriteLine("");
                         }
                     }
@@ -878,6 +952,8 @@ namespace Internship_2_C_Sharp
             static void deleteTripsMoreExpensiveThan(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
                 Console.WriteLine("");
+                Console.WriteLine("BRISANJE POSTOJEĆIH PUTOVANJA SKUPLJIH OD UNESENOG IZNOSA");
+                Console.WriteLine("");
 
                 while (true)
                 {
@@ -891,26 +967,38 @@ namespace Internship_2_C_Sharp
 
                         if (filtered_trips_per_user.Any())
                         {
-                            foreach (var user in filtered_trips_per_user)
-                            {
-                                int user_id = user.Key;
-                                List<int> trip_ids = user.Value;
+                            Console.WriteLine("");
+                            Console.Write("Želite li obrisati putovanja skuplja od unesenog iznosa ({0} EUR)? (DA/NE) ", threshold);
 
-                                foreach (int trip_id in trip_ids)
+                            if (checkInput())
+                            {
+
+                                foreach (var user in filtered_trips_per_user)
                                 {
-                                    users[user_id].Item4.Remove(trip_id);
+                                    int user_id = user.Key;
+                                    List<int> trip_ids = user.Value;
+
+                                    foreach (int trip_id in trip_ids)
+                                    {
+                                        users[user_id].Item4.Remove(trip_id);
+                                    }
                                 }
+
+                                Console.WriteLine("Putovanja skuplja od unesenog iznosa ({0} EUR) su obrisana", threshold);
                             }
 
-                            Console.WriteLine("Putovanja skuplja od unesenog iznosa ({0} EUR) su izbrisana", threshold);
-                            Console.WriteLine("");
+                            else
+                            {
+                                Console.WriteLine("Brisanje putovanja skupljih od unesenog iznosa ({0} EUR) je prekinuto", threshold);
+                            }
+
                             break;
                         }
 
                         else
                         {
-                            Console.WriteLine("Putovanja skuplja od unesenog iznosa ({0} EUR) ne postoje", threshold);
                             Console.WriteLine("");
+                            Console.WriteLine("Putovanja skuplja od unesenog iznosa ({0} EUR) ne postoje", threshold);
                             break;
                         }
                     }
@@ -925,6 +1013,9 @@ namespace Internship_2_C_Sharp
 
             static void deleteTripsCheaperThan(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
+
+                Console.WriteLine("");
+                Console.WriteLine("BRISANJE POSTOJEĆIH PUTOVANJA JEFTINIJIH OD UNESENOG IZNOSA");
                 Console.WriteLine("");
 
                 while (true)
@@ -939,26 +1030,37 @@ namespace Internship_2_C_Sharp
 
                         if (filtered_trips_per_user.Any())
                         {
-                            foreach (var user in filtered_trips_per_user)
-                            {
-                                int user_id = user.Key;
-                                List<int> trip_ids = user.Value;
+                            Console.WriteLine("");
+                            Console.Write("Želite li obrisati putovanja jeftinija od unesenog iznosa ({0} EUR)? (DA/NE) ", threshold);
 
-                                foreach (int trip_id in trip_ids)
+                            if (checkInput())
+                            {
+                                foreach (var user in filtered_trips_per_user)
                                 {
-                                    users[user_id].Item4.Remove(trip_id);
+                                    int user_id = user.Key;
+                                    List<int> trip_ids = user.Value;
+
+                                    foreach (int trip_id in trip_ids)
+                                    {
+                                        users[user_id].Item4.Remove(trip_id);
+                                    }
                                 }
+
+                                Console.WriteLine("Putovanja jeftinija od unesenog iznosa ({0} EUR) su obrisana", threshold);
                             }
 
-                            Console.WriteLine("Putovanja jeftinija od unesenog iznosa ({0} EUR) su izbrisana", threshold);
-                            Console.WriteLine("");
+                            else
+                            {
+                                Console.WriteLine("Brisanje putovanja jeftinijih od unesenog iznosa ({0} EUR) je prekinuto", threshold);
+                            }
+
                             break;
                         }
 
                         else
                         {
-                            Console.WriteLine("Putovanja jeftinija od unesenog iznosa ({0} EUR) ne postoje", threshold);
                             Console.WriteLine("");
+                            Console.WriteLine("Putovanja jeftinija od unesenog iznosa ({0} EUR) ne postoje", threshold);
                             break;
                         }
                     }
@@ -1029,9 +1131,12 @@ namespace Internship_2_C_Sharp
 
             static void editTrip(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
             {
+                Console.WriteLine("UREĐIVANJE POSTOJECEG PUTOVANJA PO IDENTIFIKATORU");
+                Console.WriteLine("");
+
                 while (true)
                 {
-                    Console.Write("Odaberite putovanje: ");
+                    Console.Write("Odaberite putovanje (unesite ID): ");
 
                     if (int.TryParse(Console.ReadLine(), out int trip_id))
                     {
@@ -1109,8 +1214,11 @@ namespace Internship_2_C_Sharp
                             total_fuel_cost = calculateTotalFuelCost(fuel_consumption, fuel_cost);
 
                             Console.WriteLine("");
+                            Console.Write("Želite li urediti putovanje s identifikatorom ({0})? (DA/NE) ", trip_id);
 
-                            users[user_id].Item4[trip_id] = new Tuple<string, double, double, double, double>
+                            if(checkInput())
+                            {
+                                users[user_id].Item4[trip_id] = new Tuple<string, double, double, double, double>
                                 (
                                     trip_date,
                                     distance,
@@ -1119,14 +1227,27 @@ namespace Internship_2_C_Sharp
                                     total_fuel_cost
                                 );
 
-                            Console.WriteLine("Putovanje uredeno");
-                            Console.WriteLine("");
+                                Console.WriteLine("Putovanje s identifikatorom ({0}) je uredeno:", trip_id);
+                                Console.WriteLine();
+
+                                showTrips(new List<Tuple<string, double, double, double, double>>
+                                {
+                                    users[user_id].Item4[trip_id]
+                                });
+                            }
+
+                            else
+                            {
+                                Console.WriteLine("Uređivanje putovanja s identifikatorom ({0}) je prekinuto", trip_id);
+                                Console.WriteLine();
+                            }
+
                             break;
                         }
 
                         else
                         {
-                            Console.WriteLine("Putovanje ne postoji");
+                            Console.WriteLine("Putovanje s identifikatorom ({0}) ne postoji", trip_id);
                             Console.WriteLine("");
                         }
                     }
@@ -1180,6 +1301,8 @@ namespace Internship_2_C_Sharp
 
                 while (isOver)
                 {
+                    Console.WriteLine("");
+
                     showTripsListMenu();
 
                     Console.Write("Odabir: ");
@@ -1218,7 +1341,6 @@ namespace Internship_2_C_Sharp
                                 break;
                             default:
                                 Console.WriteLine("Unos nije valjan");
-                                Console.WriteLine("");
                                 break;
 
                         }
@@ -1227,7 +1349,6 @@ namespace Internship_2_C_Sharp
                     else
                     {
                         Console.WriteLine("Unos nije valjan");
-                        Console.WriteLine("");
                     }
                 }
             }
@@ -1249,15 +1370,23 @@ namespace Internship_2_C_Sharp
             {
                 int trips_counter = 0;
 
+                if (!trips.Any())
+                {
+                    Console.WriteLine("GREŠKA: Lista je prazna");
+                    return;
+                }
+
                 foreach (var trip in trips)
                 {
-                    Console.WriteLine("Putovanje #{0}", ++trips_counter);
+                    if (trips.Count > 1)
+                        Console.WriteLine("Putovanje #{0}", ++trips_counter);
                     Console.WriteLine("Datum: {0}", trip.Item1);
                     Console.WriteLine("Kilometri: {0:F2}", trip.Item2);
                     Console.WriteLine("Gorivo: {0:F2} L", trip.Item3);
                     Console.WriteLine("Cijena po litri: {0:F2} EUR", trip.Item4);
                     Console.WriteLine("Ukupno: {0:F2} EUR", trip.Item5);
-                    Console.WriteLine("");
+                    if (trip != trips.Last())
+                        Console.WriteLine("");
                 }
             }
 
@@ -1390,15 +1519,16 @@ namespace Internship_2_C_Sharp
 
                 while (isOver)
                 {
+
+                    Console.WriteLine("");
                     Console.Write("Unesi ID korisnika za kojeg želiš izvještaj: ");
 
                     if (int.TryParse(Console.ReadLine(), out int user_id))
                     {
-                        Console.WriteLine("");
-
                         if (isUserValid(users, user_id))
                         {
-                            Console.WriteLine("Odabran je korisnik {0} {1}", users[user_id].Item1.ToUpper(), users[user_id].Item2.ToUpper());
+                            Console.WriteLine("");
+                            Console.WriteLine("Odabran je korisnik {0} {1} ({2})", users[user_id].Item1, users[user_id].Item2, user_id);
                             var trips = new List<Tuple<string, double, double, double, double>>();
                             filterTripsFromUser(users, user_id, trips);
                             chooseFromTripsReportMenu(trips);
@@ -1408,14 +1538,12 @@ namespace Internship_2_C_Sharp
                         else
                         {
                             Console.WriteLine("Korisnik s ID-em {0} ne postoji", user_id);
-                            Console.WriteLine("");
                         }
                     }
 
                     else
                     {
                         Console.WriteLine("Unos nije valjan");
-                        Console.WriteLine("");
                     }
                 }
             }
@@ -1435,48 +1563,47 @@ namespace Internship_2_C_Sharp
             {
                 bool isOver = true;
 
-                Console.WriteLine("");
-
                 while (isOver)
                 {
+                    Console.WriteLine("");
+
                     showTripsReportMenu();
 
                     Console.Write("Odabir: ");
 
                     if (char.TryParse((Console.ReadLine() ?? "").ToLower(), out char choice))
                     {
-                        Console.WriteLine("");
-
                         switch (choice)
                         {
                             case 'a':
                                 showTotalFuelConsumption(trips);
+                                isOver = false;
                                 break;
                             case 'b':
                                 showTotalFuelCost(trips);
+                                isOver = false;
                                 break;
                             case 'c':
                                 showAverageFuelConsumption(trips);
+                                isOver = false;
                                 break;
                             case 'd':
                                 showMaxConsumptionTrip(trips);
+                                isOver = false;
                                 break;
                             case 'e':
                                 showTripsByDate(trips);
+                                isOver = false;
                                 break;
                             default:
                                 Console.WriteLine("Unos nije valjan");
-                                Console.WriteLine("");
                                 break;
                         }
-
-                        break;
                     }
 
                     else
                     {
                         Console.WriteLine("Unos nije valjan");
-                        Console.WriteLine("");
                     }
                 }
             }
@@ -1491,7 +1618,6 @@ namespace Internship_2_C_Sharp
                 }
 
                 Console.WriteLine("Ukupna potrošnja goriva je: {0} L", total_fuel_consumption);
-                Console.WriteLine("");
             }
 
             static void showTotalFuelCost(List<Tuple<string, double, double, double, double>> trips)
@@ -1503,8 +1629,8 @@ namespace Internship_2_C_Sharp
                     total_fuel_cost += trip.Item5;
                 }
 
-                Console.WriteLine("Ukupna potrošnja goriva je: {0} EUR", total_fuel_cost);
                 Console.WriteLine("");
+                Console.WriteLine("Ukupna potrošnja goriva je: {0} EUR", total_fuel_cost);
             }
 
             static void showAverageFuelConsumption(List<Tuple<string, double, double, double, double>> trips)
@@ -1521,8 +1647,8 @@ namespace Internship_2_C_Sharp
 
                 average_fuel_consumption = (total_fuel_consumption / total_distance) * 100;
 
-                Console.WriteLine("Ukupna potrošnja goriva je: {0:F2} L/100km", average_fuel_consumption);
                 Console.WriteLine("");
+                Console.WriteLine("Ukupna potrošnja goriva je: {0:F2} L/100km", average_fuel_consumption);
             }
 
             static void showMaxConsumptionTrip(List<Tuple<string, double, double, double, double>> trips)
@@ -1531,13 +1657,13 @@ namespace Internship_2_C_Sharp
 
                 if (maximum_consumption_trip == null) { return; }
 
+                Console.WriteLine("");
                 Console.WriteLine("Putovanje s najvećom potrošnjom goriva:");
                 Console.WriteLine("Datum: {0}", maximum_consumption_trip.Item1);
                 Console.WriteLine("Kilometri: {0}", maximum_consumption_trip.Item2);
                 Console.WriteLine("Gorivo: {0} L", maximum_consumption_trip.Item3);
                 Console.WriteLine("Cijena po litri: {0} EUR", maximum_consumption_trip.Item4);
                 Console.WriteLine("Ukupno: {0} EUR", maximum_consumption_trip.Item5);
-                Console.WriteLine("");
             }
 
             static void showTripsByDate(List<Tuple<string, double, double, double, double>> trips)
@@ -1546,9 +1672,9 @@ namespace Internship_2_C_Sharp
 
                 do
                 {
+                    Console.WriteLine("");
                     Console.Write("Unesite datum putovanja (YYYY-MM-DD): ");
                     trip_date = Console.ReadLine() ?? "";
-                    Console.WriteLine("");
                 } while (string.IsNullOrEmpty(trip_date) || !isDateValid(trip_date));
 
                 var filtered_trips = trips.Where(u => trip_date == u.Item1).ToList();
@@ -1556,11 +1682,11 @@ namespace Internship_2_C_Sharp
                 if (filtered_trips.Count == 0)
                 {
                     Console.WriteLine("Ne postoji niti jedno putovanje datuma {0}", trip_date);
-                    Console.WriteLine("");
                 }
 
                 else
                 {
+                    Console.WriteLine("");
                     showTrips(filtered_trips);
                 }
             }
@@ -1589,8 +1715,8 @@ namespace Internship_2_C_Sharp
                     }
                 }
 
-                Console.WriteLine("Korisnik s najvećom ukupnim troškom goriva je {0} - {1} {2} i ona iznosi: {3} EUR", max_user_id, users[max_user_id].Item1, users[max_user_id].Item2, max_fuel_cost);
                 Console.WriteLine("");
+                Console.WriteLine("Korisnik s najvećom ukupnim troškom goriva je {0} {1} ({2}) i on iznosi: {3} EUR", users[max_user_id].Item1, users[max_user_id].Item2, max_user_id, max_fuel_cost);
             }
 
             static void showUserWithMostTrips(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
@@ -1616,6 +1742,7 @@ namespace Internship_2_C_Sharp
                     }
                 }
 
+                Console.WriteLine("");
                 Console.WriteLine("Korisnici s najviše putovanja ({0}):", most_trips_number);
                 Console.WriteLine("{0, -8} {1, -16} {2, -16}", "ID", "Ime", "Prezime");
 
@@ -1623,8 +1750,6 @@ namespace Internship_2_C_Sharp
                 {
                     Console.WriteLine("{0, -8} {1, -16} {2}", user_id, users[user_id].Item1, users[user_id].Item2);
                 }
-
-                Console.WriteLine("");
             }
 
             static void showAverageTripsPerUser(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
@@ -1641,9 +1766,9 @@ namespace Internship_2_C_Sharp
 
                 average_trips_per_user = (double) total_number_of_trips / total_number_of_users;
 
+                Console.WriteLine("");
                 Console.WriteLine("Ukupno ima {0} korisnika i {1} putovanja", total_number_of_users, total_number_of_trips);
                 Console.WriteLine("Prosječan broj putovanja po korisniku iznosi: {0:F2}", average_trips_per_user);
-                Console.WriteLine("");
             }
 
             static void showTotalDistance(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
@@ -1664,9 +1789,9 @@ namespace Internship_2_C_Sharp
                     }
                 }
 
+                Console.WriteLine("");
                 Console.WriteLine("Ukupno ima {0} korisnika i {1} putovanja", total_number_of_users, total_number_of_trips);
                 Console.WriteLine("Zajedno su svi korisnici prešli: {0:F2} km", total_distance);
-                Console.WriteLine("");
             }
         }
     }
