@@ -246,6 +246,7 @@ namespace Internship_2_C_Sharp
                             case 2:
                                 break;
                             case 3:
+                                editTrip(users);
                                 break;
                             case 4:
                                 chooseFromTripsListMenu(users);
@@ -389,7 +390,7 @@ namespace Internship_2_C_Sharp
             {
                 while (true)
                 {
-                    Console.Write("Odaberite korisnika: (korisnik unosi id) ");
+                    Console.Write("Odaberite korisnika: ");
 
                     if (int.TryParse(Console.ReadLine(), out int user_id))
                     {
@@ -648,6 +649,135 @@ namespace Internship_2_C_Sharp
                 Console.WriteLine("");
             }
 
+            static void editTrip(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users)
+            {
+                while (true)
+                {
+                    Console.Write("Odaberite putovanje: ");
+
+                    if (int.TryParse(Console.ReadLine(), out int trip_id))
+                    {
+                        int user_id = 0;
+
+                        if (isTripValid(users, trip_id, ref user_id))
+                        {
+                            double distance, fuel_consumption, fuel_cost, total_fuel_cost;
+                            string trip_date;
+
+                            do
+                            {
+                                Console.Write("Unesite datum putovanja (YYYY-MM-DD) (ili ostavite prazno ako ne zelite promjene): ");
+                                trip_date = Console.ReadLine() ?? "";
+
+                                if (string.IsNullOrEmpty(trip_date))
+                                {
+                                    trip_date = users[user_id].Item4[trip_id].Item1;
+                                    break;
+                                }
+                            } while (!isDateValid(trip_date));
+
+                            while (true)
+                            {
+                                Console.Write("Unesite prijeđenu kilometražu (ili ostavite prazno ako ne zelite promjene): ");
+                                string input = Console.ReadLine() ?? "";
+
+                                if (string.IsNullOrEmpty(input))
+                                {
+                                    distance = users[user_id].Item4[trip_id].Item2;
+                                    break;
+                                }
+
+                                else if (double.TryParse(input, out distance) && distance > 0)
+                                    break;
+
+                                Console.WriteLine("Unos nije valjan");
+                            }
+
+                            while (true)
+                            {
+                                Console.Write("Unesite količinu potrošenog goriva (ili ostavite prazno ako ne zelite promjene): ");
+                                string input = Console.ReadLine() ?? "";
+
+                                if (string.IsNullOrEmpty(input))
+                                {
+                                    fuel_consumption = users[user_id].Item4[trip_id].Item3;
+                                    break;
+                                }
+
+                                else if (double.TryParse(input, out fuel_consumption) && fuel_consumption > 0)
+                                    break;
+
+                                Console.WriteLine("Unos nije valjan");
+                            }
+
+                            while (true)
+                            {
+                                
+                                Console.Write("Unesite cijenu goriva po litri (ili ostavite prazno ako ne zelite promjene): ");
+                                string input = Console.ReadLine() ?? "";
+
+                                if (string.IsNullOrEmpty(input))
+                                {
+                                    fuel_cost = users[user_id].Item4[trip_id].Item4;
+                                    break;
+                                }
+
+                                else if (double.TryParse(input, out fuel_cost) && fuel_cost > 0)
+                                    break;
+
+                                Console.WriteLine("Unos nije valjan");
+                            }
+
+                            total_fuel_cost = calculateTotalFuelCost(fuel_consumption, fuel_cost);
+
+                            Console.WriteLine("");
+
+                            users[user_id].Item4[trip_id] = new Tuple<string, double, double, double, double>
+                                (
+                                    trip_date,
+                                    distance,
+                                    fuel_consumption,
+                                    fuel_cost,
+                                    total_fuel_cost
+                                );
+
+                            Console.WriteLine("Putovanje uredeno");
+                            Console.WriteLine("");
+                            break;
+                        }
+
+                        else
+                        {
+                            Console.WriteLine("Putovanje ne postoji");
+                            Console.WriteLine("");
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Unos nije valjan");
+                        Console.WriteLine("");
+                    }
+                }
+            }
+
+            static bool isTripValid(Dictionary<int, Tuple<string, string, string, Dictionary<int, Tuple<string, double, double, double, double>>>> users, int trip_id, ref int user_id)
+            {
+                foreach (var user in users)
+                {
+                    user_id = user.Key;
+                    var trips = user.Value.Item4;
+
+                    foreach (var trip in trips)
+                    {
+                        if (trip.Key == trip_id)
+                            return true;
+                    }
+                }
+
+                return false;
+            }
+
             static double calculateTotalFuelCost(double fuel_consumption, double fuel_cost)
             {
                 return fuel_consumption * fuel_cost;
@@ -747,10 +877,10 @@ namespace Internship_2_C_Sharp
                 {
                     Console.WriteLine("Putovanje #{0}", ++trips_counter);
                     Console.WriteLine("Datum: {0}", trip.Item1);
-                    Console.WriteLine("Kilometri: {0}", trip.Item2);
-                    Console.WriteLine("Gorivo: {0} L", trip.Item3);
-                    Console.WriteLine("Cijena po litri: {0} EUR", trip.Item4);
-                    Console.WriteLine("Ukupno: {0} EUR", trip.Item5);
+                    Console.WriteLine("Kilometri: {0:F2}", trip.Item2);
+                    Console.WriteLine("Gorivo: {0:F2} L", trip.Item3);
+                    Console.WriteLine("Cijena po litri: {0:F2} EUR", trip.Item4);
+                    Console.WriteLine("Ukupno: {0:F2} EUR", trip.Item5);
                     Console.WriteLine("");
                 }
             }
